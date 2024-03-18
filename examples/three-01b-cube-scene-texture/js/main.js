@@ -12,33 +12,43 @@ import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/cont
 
 
 
-// ~~~~~~~~~~~~~~~~Set up scene, camera, + renderer~~~~~~~~~~~~~~~~
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+// ~~~~~~~~~~~~~~~~ Declare Global Variables~~~~~~~~~~~~~~~~
+let scene, camera, renderer, cube;
 
 
-// ~~~~~~~~~~~~~~~~ Initiate add-ons ~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~ Initialize Scene in init() ~~~~~~~~~~~~~~~~
+function init(){
 
-const controls = new OrbitControls(camera, renderer.domElement);
-// const loader = new GLTFLoader(); // to load 3d models
+    // ~~~~~~Set up scene, camera, + renderer ~~~~~~
 
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-
-// ~~~~~~~~~~~~~~~~ Create Geometry ~~~~~~~~~~~~~~~~
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
 
-// ~~~~~~~~~~~~~~~~Position Camera~~~~~~~~~~~~~~~~
-camera.position.z = 5;  
+    // ~~~~~~ Initiate add-ons ~~~~~~
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    // const loader = new GLTFLoader(); // to load 3d models
+
+
+
+    // ~~~~~~ Create Geometry ~~~~~~
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+
+
+    // ~~~~~~Position Camera~~~~~~
+    camera.position.z = 5;
+
+
+}
 
 
 
@@ -60,4 +70,14 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+function onWindowResize() {
+ camera.aspect = window.innerWidth / window.innerHeight;
+ camera.updateProjectionMatrix();
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+}
+
+window.addEventListener('resize', onWindowResize, false);
+
+init(); // execute initialize function
 animate(); // execute animation function

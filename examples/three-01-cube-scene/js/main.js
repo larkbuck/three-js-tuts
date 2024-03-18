@@ -2,7 +2,7 @@
 // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
 
 
-//~~~~~~~Import Three.js (also linked to as import map in HTML)~~~~~~
+//~~~~~~~Import Three.js (also linked to as an import map in the HTML)~~~~~~
 import * as THREE from 'three';
 
 
@@ -20,6 +20,9 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+
+// ~~~~~~~~~~~~~~~~ Initiate add-ons ~~~~~~~~~~~~~~~~
 
 const controls = new OrbitControls(camera, renderer.domElement);
 // const loader = new GLTFLoader(); // to load 3d models
@@ -40,6 +43,8 @@ camera.position.z = 5;
 
 
 // ~~~~~~~~~~~~~~~~ Animation Loop ~~~~~~~~~~~~~~~~
+// (similar to draw loop in p5.js, updates every frame)
+
 function animate() {
     requestAnimationFrame(animate); // start loop by with frame update
 

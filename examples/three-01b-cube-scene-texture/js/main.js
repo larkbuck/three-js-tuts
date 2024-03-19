@@ -37,8 +37,15 @@ function init(){
 
 
     // ~~~~~~ Create Geometry ~~~~~~
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+    // const texture = new THREE.TextureLoader().load('textures/grasslight-big.jpg');
+    const texture = new THREE.TextureLoader().load('textures/animalPrint-crop-512.png');
+
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    // texture.minFilter = THREE.LinearFilter; // makes image sharper but aliased
+
     cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 

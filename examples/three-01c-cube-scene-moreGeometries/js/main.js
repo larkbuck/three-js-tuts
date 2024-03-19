@@ -13,7 +13,7 @@ import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/cont
 
 
 // ~~~~~~~~~~~~~~~~ Declare Global Variables~~~~~~~~~~~~~~~~
-let scene, camera, renderer, cube;
+let scene, camera, renderer, cube, torus;
 
 
 // ~~~~~~~~~~~~~~~~ Initialize Scene in init() ~~~~~~~~~~~~~~~~
@@ -37,21 +37,37 @@ function init(){
 
 
     // ~~~~~~ Create Geometry ~~~~~~
+
+    // Box
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
     const texture = new THREE.TextureLoader().load('textures/animalPrint-crop-512.png');
 
     const material = new THREE.MeshBasicMaterial({ map: texture });
-    // texture.minFilter = THREE.LinearFilter; // makes image sharper but aliased
 
     cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
 
+    // Torus knot
+    const geometryTorus = new THREE.TorusKnotGeometry(5, 1, 100, 16);    
+    
+    // const materialTorus = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+    // To add texture
+    const textureTorus = new THREE.TextureLoader().load('textures/animalPrint-crop-1024.png');
+    const materialTorus = new THREE.MeshBasicMaterial({ map: textureTorus });
+
+    torus = new THREE.Mesh(geometryTorus, materialTorus);
+    scene.add(torus);
+
+    // torus.scale.set(.5, .5, .5);
+
+
 
     // ~~~~~~Position Camera~~~~~~
-    camera.position.z = 5;
+    camera.position.z = 4;
 
 
 }
@@ -66,11 +82,14 @@ function animate() {
 
     // →→→→→→ add your animation here ↓↓↓↓
 
-    // camera.position.z += .03;
-    cube.rotation.x += 0.007;
-    cube.rotation.y += 0.007;
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+    torus.rotation.x += 0.001;
+    torus.rotation.y += 0.001;
 
+    camera.position.z += .025;
 
+    console.log(camera.position.z);
 
     // always end animation loop with renderer
     renderer.render(scene, camera);

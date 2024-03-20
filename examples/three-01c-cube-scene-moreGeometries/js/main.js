@@ -17,7 +17,7 @@ let scene, camera, renderer, cube, torus;
 
 
 // ~~~~~~~~~~~~~~~~ Initialize Scene in init() ~~~~~~~~~~~~~~~~
-function init(){
+function init() {
 
     // ~~~~~~Set up scene, camera, + renderer ~~~~~~
 
@@ -38,21 +38,21 @@ function init(){
 
     // ~~~~~~ Create Geometry ~~~~~~
 
-    // Box
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    // Cube
+    const geometryCube = new THREE.BoxGeometry(2, 2, 2);
     // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
-    const texture = new THREE.TextureLoader().load('textures/animalPrint-crop-512.png');
+    const textureCube = new THREE.TextureLoader().load('textures/animalPrint-crop-512.png');
 
-    const material = new THREE.MeshBasicMaterial({ map: texture });
+    const materialCube = new THREE.MeshBasicMaterial({ map: textureCube });
 
-    cube = new THREE.Mesh(geometry, material);
+    cube = new THREE.Mesh(geometryCube, materialCube);
     scene.add(cube);
 
 
     // Torus knot
-    const geometryTorus = new THREE.TorusKnotGeometry(5, 1, 100, 16);    
-    
+    const geometryTorus = new THREE.TorusKnotGeometry(5, 1, 100, 16);
+
     // const materialTorus = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
     // To add texture
@@ -62,8 +62,8 @@ function init(){
     torus = new THREE.Mesh(geometryTorus, materialTorus);
     scene.add(torus);
 
-    // torus.scale.set(.5, .5, .5);
-
+    // torus.scale.set(.5, .5, .5); // to change scale
+    // torus.position.x = 2; // to change position
 
 
     // ~~~~~~Position Camera~~~~~~
@@ -89,16 +89,14 @@ function animate() {
 
     camera.position.z += .025;
 
-    console.log(camera.position.z);
-
     // always end animation loop with renderer
     renderer.render(scene, camera);
 }
 
 function onWindowResize() {
- camera.aspect = window.innerWidth / window.innerHeight;
- camera.updateProjectionMatrix();
-renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
 }
 

@@ -1,6 +1,3 @@
-// Basic Three.JS scene from documentation, importing Three.JS through a CDN 
-// https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
-
 
 //~~~~~~~Import Three.js (also linked to as an import map in the HTML)~~~~~~
 import * as THREE from 'three';
@@ -24,14 +21,17 @@ function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
+
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
 
     // ~~~~~~ Initiate add-ons ~~~~~~
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+    // can't use orbit controls with canvas as background
+    // const controls = new OrbitControls(camera, renderer.domElement);
+
     // const loader = new GLTFLoader(); // to load 3d models
 
 
@@ -67,7 +67,7 @@ function init() {
 
 
     // ~~~~~~Position Camera~~~~~~
-    camera.position.z = 4;
+    camera.position.z = 15;
 
 
 }

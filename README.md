@@ -1,6 +1,6 @@
 # three-js-tuts
  
- Code for Three.js Tutorials 
+Code for Three.js Tutorials 
 
 Art 109 Web Dev | San Jose State Digital Media Art
 

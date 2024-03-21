@@ -37,8 +37,8 @@ function init() {
     scene.add(light);
 
     // Add helper to debug the light's position - COMMENT OUT WHEN DONE placing the light! https://threejs.org/docs/#api/en/helpers/DirectionalLightHelper
-    const helper = new THREE.DirectionalLightHelper(light, 5);
-    scene.add(helper);
+    // const helper = new THREE.DirectionalLightHelper(light, 5);
+    // scene.add(helper);
 
 
 
@@ -52,7 +52,7 @@ function init() {
     // ~~~~~~ Create Geometry ~~~~~~
 
     // ---> create cube
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
     // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
     const texture = new THREE.TextureLoader().load('textures/animalPrint-crop-512.png');

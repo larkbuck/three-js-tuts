@@ -8,37 +8,78 @@ import * as THREE from 'three';
 
 // Import add-ons
 import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
-// import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
+import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
 
 
 
-// ~~~~~~~~~~~~~~~~Set up scene, camera, + renderer~~~~~~~~~~~~~~~~
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+// ~~~~~~~~~~~~~~~~ Declare Global Variables~~~~~~~~~~~~~~~~
+let scene, camera, renderer, cube;
 
 
-// ~~~~~~~~~~~~~~~~ Initiate add-ons ~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~ Initialize Scene in init() ~~~~~~~~~~~~~~~~
+function init() {
 
-const controls = new OrbitControls(camera, renderer.domElement);
-// const loader = new GLTFLoader(); // to load 3d models
+    // ~~~~~~Set up scene, camera, + renderer ~~~~~~
 
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-
-// ~~~~~~~~~~~~~~~~ Create Geometry ~~~~~~~~~~~~~~~~
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
 
-// ~~~~~~~~~~~~~~~~Position Camera~~~~~~~~~~~~~~~~
-camera.position.z = 5;  
+    // ~~~~~~ Add Lights ~~~~~~
+
+    // ~~ add directional light 
+    const light = new THREE.DirectionalLight(0xffffff, 3);
+    light.position.set(3, 4, 5);
+    scene.add(light);
+
+    // Add helper to debug the light's position - COMMENT OUT WHEN DONE placing the light! https://threejs.org/docs/#api/en/helpers/DirectionalLightHelper
+    const helper = new THREE.DirectionalLightHelper(light, 5);
+    scene.add(helper);
+
+
+
+    // ~~~~~~ Initiate add-ons ~~~~~~
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    const loader = new GLTFLoader(); // to load 3d models
+
+
+
+    // ~~~~~~ Create Geometry ~~~~~~
+
+    // ---> create cube
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+    const texture = new THREE.TextureLoader().load('textures/animalPrint-crop-512.png');
+
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    // texture.minFilter = THREE.LinearFilter; // makes image sharper but aliased
+
+    cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+
+    // --> Load glTF
+
+    // load dog model
+    loader.load('assets/dog_shiny.gltf', function (gltf) {
+        const dog = gltf.scene;
+        scene.add(dog);
+    });
+
+
+
+
+    // ~~~~~~Position Camera~~~~~~
+    camera.position.z = 5;
+
+
+}
 
 
 
@@ -51,8 +92,8 @@ function animate() {
     // →→→→→→ add your animation here ↓↓↓↓
 
     // camera.position.z += .03;
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    cube.rotation.x += 0.007;
+    cube.rotation.y += 0.007;
 
 
 
@@ -60,4 +101,14 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+}
+
+window.addEventListener('resize', onWindowResize, false);
+
+init(); // execute initialize function
 animate(); // execute animation function

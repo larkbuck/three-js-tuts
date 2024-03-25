@@ -67,7 +67,7 @@ const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, wireframe:
 const cube = new THREE.Mesh(boxGeometry, boxMaterial);
 scene.add(cube);
 
-// ----> ADD YOUR SHADER CODE HERE ↓↓↓↓
+// ----> COPY BOILER PLATE ABOVE AND ADD YOUR SHADER CODE HERE ↓↓↓↓
 // (Follow YouTube Tut starting at 3'51" - link here: https://youtu.be/EntBBM6nqQA?feature=shared&t=231)
 
 

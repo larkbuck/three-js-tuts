@@ -1,4 +1,4 @@
-/* Set up for the shader tutorial by Suboptimal Engineer
+/* Following hader tutorial by Suboptimal Engineer
 
 LINK: https://youtu.be/EntBBM6nqQA?feature=shared
 

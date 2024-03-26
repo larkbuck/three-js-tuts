@@ -20,6 +20,9 @@ import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders
 // ~~~~~~~~~~~~~~~~ Declare Global Variables~~~~~~~~~~~~~~~~
 let scene, camera, renderer, ball, dog, mixer;
 
+// Animation variables
+let actionPant, actionTail;
+
 
 // ~~~~~~~~~~~~~~~~ Initialize Scene in init() ~~~~~~~~~~~~~~~~
 function init() {
@@ -36,7 +39,9 @@ function init() {
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+
+    document.querySelector('#scene-container').appendChild(renderer.domElement);     // adds scene to #scene-container div
+    // document.body.appendChild(renderer.domElement); // adds scene to main HTML body
 
 
 
@@ -48,8 +53,8 @@ function init() {
     scene.add(lightRight);
 
     // Add helper to debug the light's position - COMMENT OUT WHEN DONE placing the light! https://threejs.org/docs/#api/en/helpers/DirectionalLightHelper
-    const helperRight = new THREE.DirectionalLightHelper(lightRight, 5);
-    scene.add(helperRight);
+    // const helperRight = new THREE.DirectionalLightHelper(lightRight, 5);
+    // scene.add(helperRight);
 
 
     // ~~ add directional light to the left
@@ -57,8 +62,8 @@ function init() {
     lightLeft.position.set(-3, 2, 3);
     scene.add(lightLeft);
 
-    const helperLeft = new THREE.DirectionalLightHelper(lightLeft, 5);
-    scene.add(helperLeft);
+    // const helperLeft = new THREE.DirectionalLightHelper(lightLeft, 5);
+    // scene.add(helperLeft);
 
 
 
@@ -99,13 +104,13 @@ function init() {
 
         // load + play pant animation
         const clipPant = THREE.AnimationClip.findByName(clips, 'pant');
-        const actionPant = mixer.clipAction(clipPant);
+        actionPant = mixer.clipAction(clipPant);
         actionPant.play();
 
         // load + play tail animation
         const clipTail = THREE.AnimationClip.findByName(clips, 'tail');
-        const actionTail = mixer.clipAction(clipTail);
-        actionTail.play();
+        actionTail = mixer.clipAction(clipTail);
+        // actionTail.play(); // moved action tail to mouse events
     });
 
 
@@ -118,7 +123,41 @@ function init() {
 
 
 
+// ~~~~~~~~~~~~~~~~ Mouse Events ~~~~~~~~~~~~~~~~
+
+let mouseDown = false;
+
+// try changing '#scene-container' to 'header' so that click applies to the header (and not the scene)
+
+document.querySelector('#scene-container').addEventListener('mousedown', () => {
+    console.log("mouse clicked");
+    mouseDown = true;
+    actionTail.play();
+    actionTail.paused = false;
+
+});
+document.querySelector('#scene-container').addEventListener('mouseup', () => {
+    console.log("mouse released");
+    mouseDown = false;
+    // actionTail.stop();
+    actionTail.paused = true;
+
+});
+
+document.querySelector('#scene-container').addEventListener('mousemove', (e) => {
+    if (mouseDown) {
+        console.log("dragged");
+        ball.rotation.x += .5;
+    }
+});
+
+
+
+
 // ~~~~~~~~~~~~~~~~ Animation Loop ~~~~~~~~~~~~~~~~
+
+
+
 const clock = new THREE.Clock();
 
 function animate() {
@@ -154,6 +193,7 @@ function animate() {
 
 
 
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -165,3 +205,5 @@ window.addEventListener('resize', onWindowResize, false);
 
 init(); // execute initialize function
 animate(); // execute animation function
+
+

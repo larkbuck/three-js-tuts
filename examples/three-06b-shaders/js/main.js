@@ -20,7 +20,10 @@ import * as THREE from 'three';
 
 // Import add-ons
 import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
-import { Stats } from 'https://unpkg.com/three@0.162.0/examples/jsm/libs/stats.module.js';
+
+// STATS MODULE NOT IMPORTING WITH CDN - MAYBE CAUSE OF SIN WAVE ERROR?
+// import { Stats } from 'https://unpkg.com/three@0.162.0/examples/jsm/libs/stats.module.js';
+
 // import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
 
 
@@ -83,13 +86,13 @@ const boxMaterial = new THREE.ShaderMaterial({
         //   * modelViewMatrix
         //   * vec4(position.x, position.y, position.z, 1.0);
 
-        // gl_Position = projectionMatrix
-        //   * modelViewMatrix
-        //   * vec4(position.x, sin(position.z), position.z, 1.0);
-          
         gl_Position = projectionMatrix
           * modelViewMatrix
-          * vec4(position.x, sin(position.z) + position.y, position.z, 1.0);
+          * vec4(position.x, sin(position.z), position.z, 1.0);
+          
+        // gl_Position = projectionMatrix
+        //   * modelViewMatrix
+        //   * vec4(position.x, sin(position.z) + position.y, position.z, 1.0);
 
         // gl_Position = projectionMatrix
         //   * modelViewMatrix

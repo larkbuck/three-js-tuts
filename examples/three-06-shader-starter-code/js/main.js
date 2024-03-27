@@ -1,4 +1,4 @@
-/* Set up for the shader tutorial by Suboptimal Engineer
+/* Following hader tutorial by Suboptimal Engineer
 
 LINK: https://youtu.be/EntBBM6nqQA?feature=shared
 
@@ -60,34 +60,15 @@ scene.add(axesHelper);
 // ~~~~~~~~~~~~~~~~ Create Geometry ~~~~~~~~~~~~~~~~
 
 // -----> boilerplate starter code for tut
-// const boxGeometry = new THREE.BoxGeometry(1, 1, 1, 16, 16, 16); // with 16 segmented faces along each side of the box
-
-// const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, wireframe: true, }); // red wireframe
-
-// const cube = new THREE.Mesh(boxGeometry, boxMaterial);
-// scene.add(cube);
-
-// ----> COPY BOILERPLATE ABOVE AND ADD YOUR SHADER CODE HERE ↓↓↓↓
-// (Follow YouTube Tut starting at 3'51" - link here: https://youtu.be/EntBBM6nqQA?feature=shared&t=231)
-
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1, 16, 16, 16); // with 16 segmented faces along each side of the box
 
-const boxMaterial = new THREE.MeshStandardMaterial({ wireframe: true, vertexShader:
-void mapLinear() {
-    // projectionMatric, modelViewMatrix, position -> passed in from Three.js
-    gl_Position = projectionMatrix
-        * modelViewMatrix
-        * vec4(position.x, position.y, position.z, 1.0);
-}
-
-fragmentShader:
-void mapLinear() {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-}
-}); // added shader
+const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, wireframe: true, }); // red wireframe
 
 const cube = new THREE.Mesh(boxGeometry, boxMaterial);
 scene.add(cube);
+
+// ----> COPY BOILER PLATE ABOVE, PASTE BELOW AND ADD YOUR SHADER CODE HERE ↓↓↓↓
+// (Follow YouTube Tut starting at 3'51" - link here: https://youtu.be/EntBBM6nqQA?feature=shared&t=231)
 
 
 
@@ -100,7 +81,7 @@ scene.add(cube);
 
 
 // ~~~~~~~~~~~~~~~~Position Camera~~~~~~~~~~~~~~~~
-camera.position.z = 5;  
+camera.position.z = 5;
 
 
 
@@ -123,3 +104,4 @@ function animate() {
 }
 
 animate(); // execute animation function
+

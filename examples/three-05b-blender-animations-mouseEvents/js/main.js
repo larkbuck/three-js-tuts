@@ -1,9 +1,8 @@
 /* Doggo loves ball!
-1. two directional lights with helpers enabled
-2. scene background color changed
-3. glTF dog model loaded
-4. ball position updates with sin curves 
-5. dog rotation on sin curve
+1. Scene is parented to a div with id scene-container --- added <div id="scene-container"><div> to HTML
+2. Event listeners for mouse events added above animation() loop
+    - Tail animation starts / pauses with mousedown and mouse up
+    - Ball spins when mouse is dragged
 */
 
 

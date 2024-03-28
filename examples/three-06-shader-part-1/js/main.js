@@ -3,13 +3,9 @@
 
 LINK: https://youtu.be/EntBBM6nqQA?feature=shared
 
-Watch video then START ADDING SHADER CODE TO BOXGEOMETRY when you get to 3'51" of video
+Comment in/out sections of shader code from lines 81-122 as you follow along with video
 
-For starter code:
-- Lights added
-- Axes helper enabled to visualize x, y, and z coordinates 
-- Cube has wireframes enables in meshStandardMaterial
-    - https://threejs.org/docs/#api/en/materials/MeshNormalMaterial
+- Note: Axes helper enabled to visualize x, y, and z coordinates 
 
  */
 
@@ -21,7 +17,7 @@ import * as THREE from 'three';
 // Import add-ons
 import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
 
-// STATS MODULE NOT IMPORTING WITH CDN - MAYBE CAUSE OF SIN WAVE ERROR?
+// STATS MODULE NOT IMPORTING WITH CDN 
 // import { Stats } from 'https://unpkg.com/three@0.162.0/examples/jsm/libs/stats.module.js';
 
 // import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
@@ -62,33 +58,46 @@ const axesHelper = new THREE.AxesHelper(16);
 scene.add(axesHelper);
 
 
-// ~~~~~~~~~~~~~~~~ Create Geometry ~~~~~~~~~~~~~~~~
+
+// ~~~~~~~~~~~~~~~~Position Camera~~~~~~~~~~~~~~~~
+// 50m back since cube is 16m
+camera.position.z = 50;
+
+
+
+// ~~~~~~~~~~ Create Geometry ~~~~~~~~~~~~~~~~
 
 // -----> boilerplate starter code for tut
-// const boxGeometry = new THREE.BoxGeometry(1, 1, 1, 16, 16, 16); // with 16 segmented faces along each side of the box
+
+// const boxGeometry = new THREE.BoxGeometry(16, 16, 16, 16, 16, 16); // with radius of 16m and 16 segmented faces along each side of the box
 
 // const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, wireframe: true, }); // red wireframe
 
 // const cube = new THREE.Mesh(boxGeometry, boxMaterial);
 // scene.add(cube);
 
-// ----> COPY BOILERPLATE ABOVE AND ADD YOUR SHADER CODE HERE ↓↓↓↓
-// (Follow YouTube Tut starting at 3'51" - link here: https://youtu.be/EntBBM6nqQA?feature=shared&t=231)
 
-const boxGeometry = new THREE.BoxGeometry(1, 1, 1, 16, 16, 16); // with 16 segmented faces along each side of the box
+
+// -----> Box with Shader Material Added
+
+const boxGeometry = new THREE.BoxGeometry(16, 16, 16, 16, 16, 16); // with 16 segmented faces along each side of the box
+
+// Material changed to ShaderMaterial with various shaders written in GLSL
+// Note if you want to change numbers they need to be have a decimal eg. 1.0 (floats only, no integers)
 
 const boxMaterial = new THREE.ShaderMaterial({
     wireframe: true, vertexShader:
         `void main() {
-        // projectionMatrix, modelViewMatrix, position -> passed in from Three.js
-\
-        // gl_Position = projectionMatrix
-        //   * modelViewMatrix
-        //   * vec4(position.x, position.y, position.z, 1.0);
+        
+        // Comment out the various gl_Position lines below to see effects of different shaders
 
         gl_Position = projectionMatrix
           * modelViewMatrix
-          * vec4(position.x, sin(position.z), position.z, 1.0);
+          * vec4(position.x, position.y, position.z, 1.0);
+
+        // gl_Position = projectionMatrix
+        //   * modelViewMatrix
+        //   * vec4(position.x, sin(position.z), position.z, 1.0);
           
         // gl_Position = projectionMatrix
         //   * modelViewMatrix
@@ -106,16 +115,12 @@ const boxMaterial = new THREE.ShaderMaterial({
         `void main() {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
     }`,
-}); // added shader
+}); 
+
 
 const cube = new THREE.Mesh(boxGeometry, boxMaterial);
 scene.add(cube);
 
-
-
-
-// ~~~~~~~~~~~~~~~~Position Camera~~~~~~~~~~~~~~~~
-camera.position.z = 5;
 
 
 
@@ -127,9 +132,8 @@ function animate() {
 
     // →→→→→→ add your animation here ↓↓↓↓
 
-    // camera.position.z += .03;
-    // cube.rotation.x += 0.01;
-    // cube.rotation.y += 0.01;
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
 
 
 

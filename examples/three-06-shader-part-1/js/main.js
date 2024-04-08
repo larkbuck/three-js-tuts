@@ -17,8 +17,7 @@ import * as THREE from 'three';
 // Import add-ons
 import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
 
-// STATS MODULE NOT IMPORTING WITH CDN 
-// import { Stats } from 'https://unpkg.com/three@0.162.0/examples/jsm/libs/stats.module.js';
+// import Stats from 'https://unpkg.com/three@0.162.0/examples/jsm/libs/stats.module.js';
 
 // import { GLTFLoader } from 'https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js'; // to load 3d models
 

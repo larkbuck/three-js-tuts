@@ -1,107 +1,126 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer;
-let mesh;
-const AMOUNT = 6;
+import Stats from 'three/addons/libs/stats.module.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let camera, scene, renderer, startTime, object, stats;
 
 init();
 animate();
 
 function init() {
 
-  const ASPECT_RATIO = window.innerWidth / window.innerHeight;
+  camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
 
-  const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
-  const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
-
-  const cameras = [];
-
-  for (let y = 0; y < AMOUNT; y++) {
-
-    for (let x = 0; x < AMOUNT; x++) {
-
-      const subcamera = new THREE.PerspectiveCamera(40, ASPECT_RATIO, 0.1, 10);
-      subcamera.viewport = new THREE.Vector4(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
-      subcamera.position.x = (x / AMOUNT) - 0.5;
-      subcamera.position.y = 0.5 - (y / AMOUNT);
-      subcamera.position.z = 1.5;
-      subcamera.position.multiplyScalar(2);
-      subcamera.lookAt(0, 0, 0);
-      subcamera.updateMatrixWorld();
-      cameras.push(subcamera);
-
-    }
-
-  }
-
-  camera = new THREE.ArrayCamera(cameras);
-  camera.position.z = 3;
+  camera.position.set(0, 1.3, 3);
 
   scene = new THREE.Scene();
 
-  scene.add(new THREE.AmbientLight(0x999999));
+  // Lights
 
-  const light = new THREE.DirectionalLight(0xffffff, 3);
-  light.position.set(0.5, 0.5, 1);
-  light.castShadow = true;
-  light.shadow.camera.zoom = 4; // tighter shadow map
-  scene.add(light);
+  scene.add(new THREE.AmbientLight(0xcccccc));
 
-  const geometryBackground = new THREE.PlaneGeometry(100, 100);
-  const materialBackground = new THREE.MeshPhongMaterial({ color: 0x000066 });
+  const spotLight = new THREE.SpotLight(0xffffff, 60);
+  spotLight.angle = Math.PI / 5;
+  spotLight.penumbra = 0.2;
+  spotLight.position.set(2, 3, 3);
+  spotLight.castShadow = true;
+  spotLight.shadow.camera.near = 3;
+  spotLight.shadow.camera.far = 10;
+  spotLight.shadow.mapSize.width = 1024;
+  spotLight.shadow.mapSize.height = 1024;
+  scene.add(spotLight);
 
-  const background = new THREE.Mesh(geometryBackground, materialBackground);
-  background.receiveShadow = true;
-  background.position.set(0, 0, - 1);
-  scene.add(background);
+  const dirLight = new THREE.DirectionalLight(0x55505a, 3);
+  dirLight.position.set(0, 3, 0);
+  dirLight.castShadow = true;
+  dirLight.shadow.camera.near = 1;
+  dirLight.shadow.camera.far = 10;
 
-  const geometryCylinder = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-  const materialCylinder = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+  dirLight.shadow.camera.right = 1;
+  dirLight.shadow.camera.left = - 1;
+  dirLight.shadow.camera.top = 1;
+  dirLight.shadow.camera.bottom = - 1;
 
-  mesh = new THREE.Mesh(geometryCylinder, materialCylinder);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  scene.add(mesh);
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
+  scene.add(dirLight);
 
-  renderer = new THREE.WebGLRenderer();
+  // ***** Clipping planes: *****
+
+  const localPlane = new THREE.Plane(new THREE.Vector3(0, - 1, 0), 0.8);
+  const globalPlane = new THREE.Plane(new THREE.Vector3(- 1, 0, 0), 0.1);
+
+  // Geometry
+
+  const material = new THREE.MeshPhongMaterial({
+    color: 0x80ee10,
+    shininess: 100,
+    side: THREE.DoubleSide,
+
+    // ***** Clipping setup (material): *****
+    clippingPlanes: [localPlane],
+    clipShadows: true,
+
+    alphaToCoverage: true,
+
+  });
+
+  const geometry = new THREE.TorusKnotGeometry(0.4, 0.08, 95, 20);
+
+  object = new THREE.Mesh(geometry, material);
+  object.castShadow = true;
+  scene.add(object);
+
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(9, 9, 1, 1),
+    new THREE.MeshPhongMaterial({ color: 0xa0adaf, shininess: 150 })
+  );
+
+  ground.rotation.x = - Math.PI / 2; // rotates X/Y to X/Z
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // Stats
+
+  stats = new Stats();
+  document.body.appendChild(stats.dom);
+
+  // Renderer
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.shadowMap.enabled = true;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
+  window.addEventListener('resize', onWindowResize);
   document.body.appendChild(renderer.domElement);
 
-  //
+  // ***** Clipping setup (renderer): *****
+  const globalPlanes = [globalPlane],
+    Empty = Object.freeze([]);
+  renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+  renderer.localClippingEnabled = true;
 
-  window.addEventListener('resize', onWindowResize);
+  // Controls
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 1, 0);
+  controls.update();
+
+  
+
+  // Start
+
+  startTime = Date.now();
 
 }
 
 function onWindowResize() {
 
-  const ASPECT_RATIO = window.innerWidth / window.innerHeight;
-  const WIDTH = (window.innerWidth / AMOUNT) * window.devicePixelRatio;
-  const HEIGHT = (window.innerHeight / AMOUNT) * window.devicePixelRatio;
-
-  camera.aspect = ASPECT_RATIO;
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-
-  for (let y = 0; y < AMOUNT; y++) {
-
-    for (let x = 0; x < AMOUNT; x++) {
-
-      const subcamera = camera.cameras[AMOUNT * y + x];
-
-      subcamera.viewport.set(
-        Math.floor(x * WIDTH),
-        Math.floor(y * HEIGHT),
-        Math.ceil(WIDTH),
-        Math.ceil(HEIGHT));
-
-      subcamera.aspect = ASPECT_RATIO;
-      subcamera.updateProjectionMatrix();
-
-    }
-
-  }
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -109,11 +128,18 @@ function onWindowResize() {
 
 function animate() {
 
-  mesh.rotation.x += 0.005;
-  mesh.rotation.z += 0.01;
-
-  renderer.render(scene, camera);
+  const currentTime = Date.now();
+  const time = (currentTime - startTime) / 1000;
 
   requestAnimationFrame(animate);
+
+  object.position.y = 0.8;
+  object.rotation.x = time * 0.5;
+  object.rotation.y = time * 0.2;
+  object.scale.setScalar(Math.cos(time) * 0.125 + 0.875);
+
+  stats.begin();
+  renderer.render(scene, camera);
+  stats.end();
 
 }

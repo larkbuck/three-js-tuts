@@ -26,6 +26,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // const loader = new GLTFLoader(); // to load 3d models
 
 
-// →→→→→→ Follow next steps in tutorial: // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
+// →→→→→→ Follow next steps in tutorial: 
+// // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
 
 
